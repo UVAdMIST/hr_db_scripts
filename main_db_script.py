@@ -26,7 +26,7 @@ def get_id(typ, data):
     return id_num
 
 
-def append_non_duplicates(table, df, check_col, site_id=None):
+def append_non_duplicates(table, df, check_col, site_id=None, var_id=None):
     """
     adds values that are not already in the db to the db
     :param table: String. name of table where the values should be added e.g. 'sites'
@@ -36,8 +36,9 @@ def append_non_duplicates(table, df, check_col, site_id=None):
     :return: pandas df. a dataframe with the non duplicated values
     """
     con = sqlite3.connect(db_filename)
-    if table=='datavalues' and site_id:
-        sql = "SELECT * FROM datavalues WHERE SiteID = {}".format(site_id)
+    if table=='datavalues' and site_id and var_id:
+        sql = "SELECT * FROM datavalues WHERE SiteID = {} AND VariableID = {}".format(site_id,
+                                                                                      var_id)
         db_df = get_db_table_as_df(table, sql)
     else:
         db_df = get_db_table_as_df(table)
