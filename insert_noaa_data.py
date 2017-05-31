@@ -25,7 +25,9 @@ for c in col_names:
     del df_var[c]
     del df_var['DATE']
     df_var = df_var[['Value', 'Datetime', 'VariableID', 'SiteID', 'QCID']]
+    print 'inserting for variable {} for site {}'.format(variable_id, site_id)
     df_var.set_index('Datetime', inplace=True)
     print df_var.head()
-    append_non_duplicates('datavalues', df_var, ['SiteID', 'Datetime', 'VariableID'], site_id=site_id)
+    append_non_duplicates('datavalues', df_var, ['SiteID', 'Datetime', 'VariableID'],
+                          site_id=site_id, var_id=variable_id)
 

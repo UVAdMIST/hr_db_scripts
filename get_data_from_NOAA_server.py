@@ -18,7 +18,7 @@ def get_server_data(beg_date, end_date, station_num, var_type, units, fmt='xml')
 def get_request_url(beg_date, end_date, station_num, var_type, units, fmt='xml'):
     url = "http://tidesandcurrents.noaa.gov/api/datagetter?begin_date={}&" \
           "end_date={}&station={}&product={}&datum=MSL&units={}&" \
-          "time_zone=lst&application=web_services&format={}".format(
+          "time_zone=lst_ldt&application=web_services&format={}".format(
         beg_date, end_date, station_num, var_type, units, fmt
     )
     return url
@@ -118,11 +118,9 @@ def update_data(dates, var_type, station_num, data_tag, value_tag, units, var_id
         parse_tide_data(soup, data_tag, value_tag, site_id, var_id)
 
 
-def update_tide_data(yrs, station_num, var_type, units):
-    if var_type == 'hourly_height':
-        data_tag = "hr"
-    else:
-        raise Exception('we do not know the data tag for this variable code')
+def update_hourly_tide_data(yrs, station_num, units):
+    var_type = 'hourly_height'
+    data_tag = "hr"
     variable_info = get_variable_data(var_type, units)
     var_id = get_id('Variable', variable_info)
     value_tag = 'v'
@@ -190,8 +188,9 @@ years = range(st_year, e_year)
 # 8638610 - sewell's point station
 # 8639348 - money point station
 
-station = '8639348'
+station = '8638610'
 units = 'english'
 var_type = 'wind'
-# update_dly_hi_lo(years, station, units)
+update_dly_hi_lo(years, station, units)
+update_hourly_tide_data(years, station, units)
 update_wind_data(years, station, units)

@@ -83,9 +83,10 @@ def make_date_index(df, field, fmt=None):
     return df
 
 
-def get_table_for_variable(variable_id, site_id=None):
+def get_table_for_variable_code(variable_code, site_id=None):
+    var_id = get_id('Variable', {'VariableCode': variable_code})
     table_name = 'datavalues'
-    sql = """SELECT * FROM {} WHERE VariableID={};""".format(table_name, variable_id)
+    sql = """SELECT * FROM {} WHERE VariableID={};""".format(table_name, var_id)
     df = get_db_table_as_df(table_name, sql=sql)
     df = df.sort_index()
     if site_id:

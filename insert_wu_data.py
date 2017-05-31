@@ -15,4 +15,5 @@ df['VariableID'] = varid
 df['QCID'] = qcid
 df['Value'] = rawdf['WindDirDegrees']
 df.set_index('Datetime', inplace=True)
-append_non_duplicates('datavalues', df, ['SiteID', 'Datetime', 'VariableID'], site_id=siteid)
+append_non_duplicates('datavalues', df, ['SiteID', 'Datetime', 'VariableID'], site_id=siteid,
+                      var_id=varid)
