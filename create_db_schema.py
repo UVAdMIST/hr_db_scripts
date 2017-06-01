@@ -1,6 +1,6 @@
 import sqlite3
 from StringIO import StringIO
-from main_db_script import db_filename
+from main_db_script import hr_db_filename
 import pandas as pd
 
 
@@ -21,7 +21,7 @@ def drop_all_tables(cur, table_list):
         except sqlite3.OperationalError:
             pass
 
-con = sqlite3.connect(db_filename)
+con = sqlite3.connect(hr_db_filename)
 c = con.cursor()
 
 tables = ['variables', 'datavalues', 'sites', 'qualitycontrollevels']
