@@ -2,10 +2,9 @@ import requests
 import bs4
 import sqlite3
 import pandas as pd
-import os
 
-current_directory = os.path.dirname(__file__)
-hr_db_filename = os.path.join(current_directory, '../hampt_rd_data.sqlite')
+hr_db_filename = 'C:/Users/Jeff/Google Drive/research/Hampton Roads Data/Time Series/' \
+                 'hampt_rd_data.sqlite'
 
 
 def get_id(typ, data):
@@ -66,13 +65,11 @@ def append_non_duplicates(table, df, check_col, site_id=None, var_id=None):
         return df
 
 
-def get_db_table_as_df(name, sql="""SELECT * FROM {};""", dbfilename=hr_db_filename):
+def get_db_table_as_df(name, sql="""SELECT * FROM {};""", date_col=None, dbfilename=hr_db_filename):
     con = sqlite3.connect(dbfilename)
     sql = sql.format(name)
     if name == 'datavalues':
         date_col = 'Datetime'
-    else:
-        date_col = None
     df = pd.read_sql(sql, con, parse_dates=date_col)
     if name == 'datavalues':
         df = make_date_index(df, 'Datetime')
