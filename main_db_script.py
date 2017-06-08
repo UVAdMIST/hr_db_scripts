@@ -37,7 +37,7 @@ def append_non_duplicates(table, df, check_col, site_id=None, var_id=None):
     :return: pandas df. a dataframe with the non duplicated values
     """
     con = sqlite3.connect(hr_db_filename)
-    if table=='datavalues' and site_id and var_id:
+    if table =='datavalues' and site_id and var_id:
         sql = "SELECT * FROM datavalues WHERE SiteID = {} AND VariableID = {}".format(site_id,
                                                                                       var_id)
         db_df = get_db_table_as_df(table, sql)
@@ -82,10 +82,22 @@ def make_date_index(df, field, fmt=None):
     return df
 
 
-def get_table_for_variable_code(variable_code, site_id=None):
+def get_table_for_variable_code(variable_code, site_id=None, start_date=None, end_date=None):
     var_id = get_id('Variable', {'VariableCode': variable_code})
     table_name = 'datavalues'
     sql = """SELECT * FROM {} WHERE VariableID={};""".format(table_name, var_id)
+    if start_date or end_date:
+        if not start_date:
+            start_date = '1900-01-01'
+        elif not end_date:
+            end_date = '2100-01-01'
+        sql = """SELECT * FROM {} WHERE VariableID={} AND Datetime BETWEEN '{}' AND '{}';""".format(
+            table_name,
+            var_id,
+            start_date,
+            end_date
+        )
+
     df = get_db_table_as_df(table_name, sql=sql)
     df = df.sort_index()
     if site_id:
@@ -171,3 +183,9 @@ def get_server_data(url):
     response = requests.get(url)
     soup = bs4.BeautifulSoup(response.text, 'lxml')
     return soup
+
+
+def get_df_for_dates(var_code, start_date, end_date):
+    df = get_table_for_variable_code(var_code, start_date=start_date, end_date=end_date)
+    return df.pivot(columns='SiteID', values='Value')
+
